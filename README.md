@@ -181,11 +181,8 @@ var nextTick =(function () {
         }
 
     } else if (typeof MessageChannel !== "undefined") {
-        // modern browsers
-        // http://www.nonblocking.io/2011/06/windownexttick.html
+        
         var channel = new MessageChannel();
-        // At least Safari Version 6.0.5 (8536.30.1) intermittently cannot create
-        // working message ports the first time a page loads.
         channel.port1.onmessage = function () {
             requestTick = requestPortTick;
             channel.port1.onmessage = flush;
@@ -229,16 +226,13 @@ var nextTick =(function () {
 // However, this **might** have the nice side-effect of reducing the size of
 // the minified code by reducing x.call() to merely x()
 // See Mark Miller’s explanation of what this does.
-// http://wiki.ecmascript.org/doku.php?id=conventions:safe_meta_programming
 var call = Function.call;
 function uncurryThis(f) {
     return function () {
         return call.apply(f, arguments);
     };
 }
-// This is equivalent, but slower:
-// uncurryThis = Function_bind.bind(Function_bind.call);
-// http://jsperf.com/uncurrythis
+
 
 var array_slice = uncurryThis(Array.prototype.slice);
 
@@ -510,7 +504,6 @@ if (typeof process === "object" && process && process.env && process.env.Q_DEBUG
 
 /**
  * Constructs a {promise, resolve, reject} object.
- *
  * `resolve` is a callback to invoke with a more resolved value for the
  * promise. To fulfill the promise, invoke `resolve` with any value that is
  * not a thenable. To reject the promise, invoke `resolve` with a rejected
@@ -684,7 +677,7 @@ promise.all = all; // ES6
 promise.reject = reject; // ES6
 promise.resolve = Q; // ES6
 
-// XXX experimental.  This method is a way to denote that a local value is
+// XXXX experimental.  This method is a way to denote that a local value is
 // serializable and should be immediately dispatched to a remote upon request,
 // instead of passing a reference.
 Q.passByCopy = function (object) {
